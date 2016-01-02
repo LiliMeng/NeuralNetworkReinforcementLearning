@@ -56,7 +56,7 @@ public class Training_NN {
 	 {
 		 load_table("/home/lili/workspace/EECE592/BPRL/src/table.txt");
 		 process_table();
-		 NeuralNetwork network = new NeuralNetwork(5,6,4);
+		 NeuralNetwork network = new NeuralNetwork(5,1,4);
 		 network.setLearningRate(learningRate);
 		 network.setMomentum(momentum);
 		 network.setBound(1.0,0.0);
@@ -79,7 +79,7 @@ public class Training_NN {
 			 System.out.println("total_error:"+ total_error+ " error: "+ error+ " max_error "+ max_error+" iteration "+iteration); 
 		 }
 		 while(total_error > threshold);
-		 network.save(new File("/home/lili/workspace/EECE592/BPRL/src/network_weights_from_table.txt"));
+		 network.save(new File("/home/lili/workspace/EECE592/BPRL/src/NN_weights_from_LUT.txt"));
 	 }
 	 
 	 //compute error
