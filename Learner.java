@@ -6,7 +6,7 @@ public class Learner
 {   
   public static final double LearningRate = 0.1;   
   public static final double DiscountRate = 0.9;   
-  public static double explorationRate = 0.8;   
+  public static double explorationRate = 0.1;   
   private int lastState;   
   private int lastAction;   
   private boolean first = true;   
