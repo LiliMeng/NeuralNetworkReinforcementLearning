@@ -18,9 +18,8 @@ public class Training_NN {
 	//             count the iterations used, record the error with the number of rounds
 	//5. What are the best parameters? 
 	
-	
 	 public static final int NumHeading = 4;  
-	 public static final int NumTargetDistance = 10;  
+	 public static final int NumTargetDistance = 20;  
 	 public static final int NumTargetBearing = 4;  
 	 public static final int NumHitWall = 2;  
 	 public static final int NumHitByBullet = 2;  
@@ -66,6 +65,7 @@ public class Training_NN {
 		 double total_error = 0;
 		 double error = 0;
 		 double max_error = 0.0;
+		 int iteration=0;
 		 do
 		 {
 			 total_error = 0.0;
@@ -75,10 +75,11 @@ public class Training_NN {
 				 total_error += error;
 			 }
 			 max_error = total_error;
-			 System.out.println("total_error:"+ total_error+ " error: "+ error+ " max_error "+ max_error); 
+			 iteration++;
+			 System.out.println("total_error:"+ total_error+ " error: "+ error+ " max_error "+ max_error+" iteration "+iteration); 
 		 }
 		 while(total_error > threshold);
-		 network.save(new File("network_weights_from_table.txt"));
+		 network.save(new File("/home/lili/workspace/EECE592/BPRL/src/network_weights_from_table.txt"));
 	 }
 	 
 	 //compute error
