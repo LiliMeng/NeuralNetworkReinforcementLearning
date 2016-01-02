@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class NeuralCell {
+	
 	static private int lastCellID = -1;
 	protected double sigmoid_upper_bound = 1;
 	protected double sigmoid_lower_bound = 0;
@@ -13,26 +14,31 @@ public class NeuralCell {
 	private double momentum = 0.0;
 	private double output = 0.0;
 	protected double sum_from_input = 0.0;
-	private ArrayList<NeuralCell> lowerCells = new ArrayList<NeuralCell>(0);
+	private ArrayList<NeuralCell> lowerCells = new ArrayList<NeuralCell>(0);  //The cells from previous layer
 	private ArrayList<Double> weights = new ArrayList<Double>(0);
 	private ArrayList<Double> previous_weights_incremental = new ArrayList<Double>(0);
 	
-	protected double p_step_size = 0.2;
+	protected double learningRate = 0.2;
 	
 	protected double error = 0.0;
 	
 	public NeuralCell(ArrayList<NeuralCell> input_neural_nodes)
 	{
 		this.lowerCells = input_neural_nodes;
+		
 		for(int i = 0; i < lowerCells.size(); i++)
 		{
 			this.weights.add(Math.random() - 0.5);
 			this.previous_weights_incremental.add(0.0);
 		}
-		this.p_step_size = 0.2;
+		this.learningRate = 0.2;
 		this.cellID = ++lastCellID;
 	}
-	public NeuralCell(){this.cellID = ++lastCellID;}
+	public NeuralCell()
+	{
+		this.cellID = ++lastCellID;
+		
+	}
 	
 	public NeuralCell(Vector<InputCell> input_nodes)
 	{
@@ -42,9 +48,8 @@ public class NeuralCell {
 			this.weights.add(Math.random()-0.5);
 			this.previous_weights_incremental.add(0.0);
 		}
-		this.p_step_size = 0.2;
+		this.learningRate = 0.2;
 		this.cellID = ++lastCellID;
-		
 	}
 	
 	public void setInputNodes(ArrayList<NeuralCell> cell_list)
@@ -58,20 +63,24 @@ public class NeuralCell {
 	 */
 	public double getOutput()
 	{
-		if(this.sum_from_input != 0.0) this.output = sigmoid(this.sum_from_input);
-		return this.output;
+		if(this.sum_from_input != 0.0) 
+		{	
+			this.output = sigmoid(this.sum_from_input);
+		}
 		
+		return this.output;
 	}
 	
 	public void getSumFromInput()
 	{
-		double result = 0.0;
+		double sum = 0.0;
+		
 		for(int i=0; i<lowerCells.size(); i++)
 		{
-			result = result + lowerCells.get(i).getOutput()*weights.get(i);
+			sum = sum + lowerCells.get(i).getOutput()*weights.get(i);
 		}
 		
-		this.sum_from_input = result;
+		this.sum_from_input= sum;
 	}
 	
 	/**
@@ -81,37 +90,39 @@ public class NeuralCell {
 	{
 		return (this.sigmoid_upper_bound - this.sigmoid_lower_bound) * Math.pow((Math.exp(x * (-1.0)) + 1.0), (-1.0)) + this.sigmoid_lower_bound;
 	}
+	
 	/**
 	 * Compute the error propagation delta caused by this cell for lower cells.
 	 */
 	public void updateErrorOfLowerCells()
 	{
-		for(int i = 0; i<lowerCells.size(); i++)
+		for(int i=0; i<lowerCells.size(); i++)
 		{
-			double newerror = this.getError() * weights.get(i);
-			lowerCells.get(i).addError(newerror);
+			double newError=this.getError()*weights.get(i);
+			lowerCells.get(i).addError(newError);
 		}
 	}
-	
+
 	public void updateErrorOfLowerCells(double outer_error)
 	{
 		for(int i = 0; i<lowerCells.size(); i++)
 		{
-			double newerror = outer_error * weights.get(i);
-			lowerCells.get(i).addError(newerror);
+			double newError = outer_error * weights.get(i);
+			lowerCells.get(i).addError(newError);
 		}
 	}
+	
 	/**
 	 * Update the delta of this cell, often called by higher cells.
-	 * @param newdelta the delta backpropagates from one higher cell
+	 * @param newDelta the delta propagates from one higher cell
 	 */
-	public void addError(double newerror)
+	public void addError(double newError)
 	{
-		this.error += newerror;
-
+		this.error += newError;
 	}
+	
 	/**
-	 * Update the weights vector.
+	 * Update the weights vector
 	 */
 	public void updateWeights()
 	{
@@ -119,7 +130,7 @@ public class NeuralCell {
 		delta = this.getError();
 		for(int i=0; i<weights.size(); i++)
 		{
-			double incremental = p_step_size*delta*lowerCells.get(i).getOutput() + this.getMomentum()*this.previous_weights_incremental.get(i);
+			double incremental = learningRate*delta*lowerCells.get(i).getOutput() + this.getMomentum()*this.previous_weights_incremental.get(i);
 			weights.set(i, weights.get(i)+ incremental);
 			this.previous_weights_incremental.set(i, incremental);
 		}
@@ -129,7 +140,7 @@ public class NeuralCell {
 	{
 		for(int i=0; i<weights.size(); i++)
 		{
-			double incremental = p_step_size*delta*lowerCells.get(i).getOutput() + this.getMomentum()*this.previous_weights_incremental.get(i);
+			double incremental = learningRate*delta*lowerCells.get(i).getOutput() + this.getMomentum()*this.previous_weights_incremental.get(i);
 			weights.set(i, weights.get(i)+ incremental);
 			this.previous_weights_incremental.set(i, incremental);
 		}
