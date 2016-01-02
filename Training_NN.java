@@ -19,7 +19,7 @@ public class Training_NN {
 	//5. What are the best parameters? 
 	
 	 public static final int NumHeading = 4;  
-	 public static final int NumTargetDistance = 20;  
+	 public static final int NumTargetDistance = 10;  
 	 public static final int NumTargetBearing = 4;  
 	 public static final int NumHitWall = 2;  
 	 public static final int NumHitByBullet = 2;  
@@ -43,20 +43,20 @@ public class Training_NN {
 	 public static final double threshold = 1.0;
 	 
 	 //Initialization
-	 private void initialize()   
-	 {   
-	    for (int i = 0; i < NumSpace; i++)
-	    {
-	    	table_loaded[i]=0;
-	    	table_processed[i]=0;
-	    }
-	 }   
-	 
+	 private void initialize()
+	 {
+		 for(int i=0; i< NumSpace; i++)
+		 {
+			 table_loaded[i]=0;
+			 table_processed[i]=0;
+		 }
+	 }
+	  
 	 public static void main(String [] args) throws IOException
 	 {
 		 load_table("/home/lili/workspace/EECE592/BPRL/src/table.txt");
 		 process_table();
-		 NeuralNetwork network = new NeuralNetwork(6,6,4);
+		 NeuralNetwork network = new NeuralNetwork(5,6,4);
 		 network.setLearningRate(learningRate);
 		 network.setMomentum(momentum);
 		 network.setBound(1.0,0.0);
@@ -94,7 +94,6 @@ public class Training_NN {
 		 return total_error;
 	 }
 	 
-	
 	 //load table
 	 public static void load_table(String filename) throws IOException
 	 {
@@ -102,7 +101,8 @@ public class Training_NN {
 		 BufferedReader br = new BufferedReader(new FileReader(readFile));
 		 String str;
 		 int count = 0;
-		 while((str = br.readLine())!=null)
+		 
+		 while((str = br.readLine())!= null)
 		 {
 			 if(count < NumSpace)
 			 {
@@ -112,8 +112,8 @@ public class Training_NN {
 			 {
 				 break;
 			 }
-			 count++;
 		 }
+		 
 		 br.close();
 	 }
 	 
@@ -122,6 +122,7 @@ public class Training_NN {
 		 for(int i=0; i<NumSpace; i=i+NumActions)
 		 {
 			 int max = 0;
+			 
 			 for(int j=0; j<NumActions; j++)
 			 {
 				 if(table_loaded[i+j]<table_loaded[i+max])
