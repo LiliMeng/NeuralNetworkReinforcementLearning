@@ -1,4 +1,3 @@
-
 /* class used for training LUT
  * 
  */
@@ -37,7 +36,7 @@ public class Training_NN {
 	 private static double[] table_processed = new double[NumSpace];
 	 
 	 //learning rate and momentum
-	 public static final double LearningRate = 0.1;   
+	 public static final double learningRate = 0.1;   
 	 
 	 public static final double momentum = 0.0;
 	 
@@ -58,8 +57,8 @@ public class Training_NN {
 	 {
 		 load_table("table.txt");
 		 process_table();
-		 NeuralNetwork network = new NeuralNetwork(6,6,12);
-		 network.setSetp(learningRate);
+		 NeuralNetwork network = new NeuralNetwork(6,6,4);
+		 network.setLearningRate(learningRate);
 		 network.setMomentum(momentum);
 		 network.setBound(1.0,0.0);
 		 
@@ -72,7 +71,7 @@ public class Training_NN {
 			 total_error = 0.0;
 			 for(int i=0; i<NumSpace/NumActions; i++)
 			 {
-				 error = computeError(network.train(generateInputVector(generateInputandActionFromTable(i*NumActions)), generateCorrectOutput(i*NumActions);
+				 error = computeError(network.train(generateInputVector(generateInputandActionFromTable(i*NumActions)), generateCorrectOutput(i*NumActions)));
 				 total_error += error;
 			 }
 			 max_error = total_error;
@@ -161,6 +160,24 @@ public class Training_NN {
 		 return_array[5]=action;
 		 
 		 return return_array;
+	 }
+	 
+	 public static double[] generateInputVector(int[] table_array)
+	 {
+		 if(table_array.length !=6)
+		 {
+			 System.out.println("Wrong Array Length");
+		 }
+		 
+		 double[] return_array = new double[5];
+		 return_array[0] = table_array[0];
+		 return_array[1] = table_array[1];
+		 return_array[2] = table_array[2];
+		 return_array[3] = table_array[3];
+		 return_array[4] = table_array[4];
+		 
+		 return return_array;
+		 
 	 }
 	 
 	 public static double[] generateCorrectOutput(int index)
