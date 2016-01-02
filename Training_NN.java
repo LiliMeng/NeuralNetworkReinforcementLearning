@@ -55,7 +55,7 @@ public class Training_NN {
 	 
 	 public static void main(String [] args) throws IOException
 	 {
-		 load_table("table.txt");
+		 load_table("/home/lili/workspace/EECE592/BPRL/src/table.txt");
 		 process_table();
 		 NeuralNetwork network = new NeuralNetwork(6,6,4);
 		 network.setLearningRate(learningRate);
@@ -93,6 +93,7 @@ public class Training_NN {
 		 return total_error;
 	 }
 	 
+	
 	 //load table
 	 public static void load_table(String filename) throws IOException
 	 {
